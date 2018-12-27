@@ -135,7 +135,6 @@ For this project especially, we don't want to miss any POI's, so we don't care m
 ### Files: 
 - `Enron Dataset Exploration.ipynb` : Contains EDA of each variable of the dataset.
 - `poi_id.py` : Contains code to identify the POI's from the dataset.
-- `poi_feature_selection.py` : Contains code to select best features for POI classification.
 
 
 
