@@ -7,7 +7,10 @@ sys.path.append("../tools/")
 from feature_format import featureFormat, targetFeatureSplit
 from sklearn.metrics import recall_score, precision_score, classification_report
 from sklearn.model_selection import train_test_split, GridSearchCV
+from sklearn.feature_selection import SelectKBest, f_classif
 from tester import dump_classifier_and_data
+from operator import itemgetter
+
 from sklearn.naive_bayes import GaussianNB
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.tree import DecisionTreeClassifier
@@ -86,7 +89,8 @@ for key,value in data_dict.items():
 my_dataset = data_dict
 
 ###The below list of features were chosen by applying SelectKbest process
-###Refer to poi_feature_selection.py for analysis
+###The Top 11 features were chosen from the list for further analysis
+###The selectKBest code which is below lists the importance of each feature
 features_list = [
  'poi',
  'exercised_stock_options',
@@ -107,8 +111,19 @@ data = featureFormat(my_dataset, features_list, sort_keys = True)
 labels, features = targetFeatureSplit(data)
 print 'Total Number Of Data Points After Removing Outliers And Feature Formatting : ', len(features)
 
-#Scalling The Data Using MinMaxScaler
+#Code to print importance of each feature and to select best out of them for further analysis
+'''selector = SelectKBest(f_classif, k='all')
+selector.fit(features, labels)
+feature_importances_skb = selector.scores_
+features_list_with_imp = []
+for i in range(len(feature_importances_skb)):
+    features_list_with_imp.append([features_list[i+1], feature_importances_skb[i]])
+features_list_with_imp = sorted(features_list_with_imp, reverse=True, key=itemgetter(1))
+for i in range(len(features_list_with_imp)):
+    print features_list_with_imp[i]'''
 
+
+#Scalling The Data Using MinMaxScaler
 scaler = MinMaxScaler()
 features = scaler.fit_transform(features)
 
