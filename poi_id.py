@@ -102,8 +102,19 @@ features_list = [
  'bonus_salary_ratio',
  'long_term_incentive',
  'restricted_stock',
- 'total_payments',
- 'shared_receipt_with_poi'
+#'total_payments',
+#'shared_receipt_with_poi',
+#'loan_advances',
+#'expenses',
+#'from_poi_to_this_person',
+#'other',
+#'from_poi_to_this_person_ratio',
+#'from_this_person_to_poi',
+#'director_fees',
+#'to_messages',
+#'deferral_payments',
+#'from_messages',
+#'restricted_stock_deferred'
 ]
 
 ### Extract features and labels from dataset for local testing
@@ -139,34 +150,37 @@ features_train, features_test, labels_train, labels_test = \
 
 # Provided to give you a starting point. Try a variety of classifiers.
 ### Gaussian Naive Bayes Classifier
-#clf = GaussianNB()
+clf = GaussianNB()
 
 ### Decision Tree Classifier
-### Best Params Reported By GridSearchCV {'min_samples_split': 2, 'criterion': 'entropy', 'max_depth': 2}
-clf = DecisionTreeClassifier(min_samples_split = 2, criterion = 'entropy', max_depth = 2)
+### Best Params Reported By GridSearchCV {'min_samples_split': 11, 'splitter': 'random', 'criterion': 'entropy', 'max_depth': 2, 'class_weight': None}
+#clf = DecisionTreeClassifier(min_samples_split=11, splitter='random', criterion='entropy', max_depth=2, class_weight=None)
+#clf = DecisionTreeClassifier()
 
 ### Random Forest Classifier
-### Best Params Reported By GridSearchCV {'min_samples_split': 11, 'criterion': 'gini', 'max_depth': 5}
-#clf = RandomForestClassifier()
+### Best Params Reported By GridSearchCV {'min_samples_split': 4, 'criterion': 'gini', 'max_depth': 7, 'class_weight': None}
+#clf = RandomForestClassifier(min_samples_split=4, criterion='gini', max_depth=7, class_weight=None)
 
 ### KNeighborsClassifier
-### Best Params Reported By GridSearchCV  {'n_neighbors': 8, 'weights': 'distance', 'algorithm': 'auto'}
-#clf = KNeighborsClassifier()
+### Best Params Reported By GridSearchCV  {'n_neighbors': 6, 'weights': 'uniform', 'algorithm': 'auto'}
+#clf = KNeighborsClassifier(n_neighbors=6, weights='uniform', algorithm='auto')
 
 ### Params For Tuning DecisionTree
 '''params = {'criterion':['gini','entropy'],
           'max_depth':[i for i in range(2,15)],
-          'min_samples_split':[i for i in range(2,15)]
-}
+          'min_samples_split':[i for i in range(2,15)],
+          #'splitter' : ['best', 'random'],
+          'class_weight' : [None, 'balanced']
+         }'''
 
 ### Params For Tuning KNN
-params = {'n_neighbors' : [i for i in range(5,20)],
+'''params = {'n_neighbors' : [i for i in range(5,20)],
           'weights': ['uniform', 'distance'],
           'algorithm':['auto', 'ball_tree', 'kd_tree', 'brute'],
-          }
+          }'''
 
 
-clf = GridSearchCV(clf, params, verbose=1000)'''
+#clf = GridSearchCV(clf, params, verbose=1000)
 clf.fit(features_train, labels_train)
 pred = clf.predict(features_test)
 
