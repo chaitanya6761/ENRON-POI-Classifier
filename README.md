@@ -77,8 +77,28 @@ SelectKBest was used to select the best features and below are thier scores:
 | from_messages           |  0.16970094762175533 |
 | restricted_stock_deferred           | 0.065499652909942141 |
 
+After Getting all the scores from selectKBest, I sorted them in a decreasing order and started with top 5 features as it was a good combination of both financial and email features and continued till my model achieved maximum recall and precision values. Below table lists of metrics for various k levels:
 
-Top 11 features from the above list were used to identify POI's with various Ml Algos.
+| K | Recall | Precision | F1 Score | 
+| :-| -----: |-----: | -----: |
+| 5 | 0.32650 | 0.49545 | 0.39361 |
+| **6** | **0.38550** | **0.51572** | **0.44120** |
+| **7** | **0.38550** | **0.51572** | **0.44120** |
+| 8 | 0.37950 | 0.48716 | 0.42664 |
+| **9**| **0.39550** | **0.48617** | **0.43617** |
+| 10 | 0.31700 | 0.38355 | 0.34711 |
+| 11 | 0.31400 | 0.36639 | 0.33818 |
+| 12 | 0.31150 | 0.32550 | 0.31834 |
+| 13 | 0.31100 | 0.32430 | 0.31751 |
+| 14 | 0.31100 | 0.32514 | 0.31791 |
+| 15 | 0.31000 | 0.30437 | 0.30716 |
+| 16 | 0.31000 | 0.30437 | 0.30716 |
+| 17 | 0.31000 | 0.30969 | 0.30985 |
+| 18 | 0.32850 | 0.24830 | 0.28282 |
+| 19 | 0.30550 | 0.22979 | 0.26229 |
+| 20 | 0.27050 | 0.21392 | 0.23890 |
+
+The Above table shows that my model performed well, if the chosen number of top features were 6,7 or 9. I chose top 9 features to train my model because it was giving me the highest recall score of `0.39550`.
 
 **Q3. What algorithm did you end up using? What other one(s) did you try? How did model performance differ between algorithms?**
 
@@ -88,10 +108,10 @@ Below are the scores of each algorithm before tuning as reported by tester.py:
 
 | Algorithm       | Recall | Precision | F1 Score| Accuracy |
 | :---------------------- | -----: |-----: |-----: | -----: |
-| Gaussian Naive Bayes | 0.31400 | 0.36639 | 0.33818 | 0.83613 |
-| Decision Tree        | 0.31200 | 0.32687 | 0.31926 | 0.82260 |
-| Random Forest        | 0.16350 | 0.43083 | 0.23704 | 0.85967 |
-| K Nearest Neighbours | 0.16800 | 0.63878 | 0.26603 | 0.87640 |
+| Gaussian Naive Bayes | 0.39550 | 0.48617 | 0.43617 | 0.85393 |
+| Decision Tree        | 0.30300 | 0.31945 | 0.31101 | 0.80821 |
+| Random Forest        | 0.16800 | 0.40191 | 0.23695 | 0.84543 |
+| K Nearest Neighbours | 0.25900 | 0.68883 | 0.37645 | 0.87743 |
 
 Only Gussian Naive Bayes And Decision Tree seem to achieve the limit of 0.3 for both recall and precision.
 
@@ -102,16 +122,16 @@ Tuning of algorithm refers to adjusting the parameters, so that we can achieve b
 GridSearchCV was used to tune the parameters of the algorithms. The table below shows the performence metrics after tuning process.
 
 The best metrics chosen for each algorithm are
-- Decision Tree : {'min_samples_split': 2, 'criterion': 'entropy', 'max_depth': 2}
-- Random Forest : {'min_samples_split': 11, 'criterion': 'gini', 'max_depth': 5}
-- KNN : {'n_neighbors': 8, 'weights': 'distance', 'algorithm': 'auto'}
+- Decision Tree : {'min_samples_split': 11, 'splitter': 'random', 'criterion': 'entropy', 'max_depth': 2, 'class_weight': None}
+- Random Forest : {'min_samples_split': 4, 'criterion': 'gini', 'max_depth': 7, 'class_weight': None}
+- KNN : {'n_neighbors': 6, 'weights': 'uniform', 'algorithm': 'auto'}
 
 | Algorithm       | Recall | Precision | F1 Score| Accuracy |
 | :---------------------- | -----: |-----: |-----: | -----: |
-| Gaussian Naive Bayes | 0.31400 | 0.36639 | 0.33818 | 0.83613 |
-| Decision Tree        | 0.39650 | 0.38702 | 0.39170 | 0.83580 |
-| Random Forest        | 0.18250 | 0.45398 | 0.26034 | 0.86173 |
-| K Nearest Neighbours | 0.05750 | 0.58081 | 0.10464 | 0.86880 |
+| Gaussian Naive Bayes | 0.39550 | 0.48617 | 0.43617 | 0.85393 |
+| Decision Tree        | 0.11650 | 0.48340 | 0.18775 | 0.85600 |
+| Random Forest        | 0.19200 | 0.40506 | 0.26052 | 0.84429 |
+| K Nearest Neighbours | 0.08600 | 0.99422 | 0.15831 | 0.86936 |
 
 After tuning the parameters for the algorithms, only decision tree and random forest seem to show some improvement in metrics.
 
@@ -125,7 +145,7 @@ The dataset used in this project has a imblance in lables, that's why I used tes
 
 **Q6. Give at least 2 evaluation metrics and your average performance for each of them. Explain an interpretation of your metrics that says something human-understandable about your algorithm’s performance.**
 
-The two evaluation metrics which were used to determine the performence are precision and recall, because accuracy alone would not be enough as our dataset has imblance in classes. The precison and recall reported by tuned decison tree are `0.38702` and `0.3965`
+The two evaluation metrics which were used to determine the performence are precision and recall, because accuracy alone would not be enough as our dataset has imblance in classes. The highest precison(0.48617) and recall(0.39550) scores were reported by GussianNB.
 
 - Precision : Out all the datapoints labelled as POI'S, how many are actually POI's.
 - Recall    : Out all the datapoints that are truely POI'S, how many datapoints were correctly classified as POI'S.
